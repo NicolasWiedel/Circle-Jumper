@@ -1,4 +1,4 @@
-package com.jga.jumper.util;
+package com.jga.util;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;

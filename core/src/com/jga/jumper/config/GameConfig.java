@@ -12,6 +12,8 @@ public class GameConfig {
     public static final float WORLD_CENTER_X = WORLD_WIDTH / 2f;
     public static final float WORLD_CENTER_Y = WORLD_HEIGHT / 2f;
 
+    public static final int CELL_SIZE = 1;
+
     // == constructor ==
     private GameConfig(){
 

@@ -1,4 +1,4 @@
-package com.jga.jumper.util.debug;
+package com.jga.util.debug;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;

@@ -10,35 +10,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Logger;
 import com.jga.jumper.screen.game.GameScreen;
+import com.jga.util.game.GameBase;
 
-public class CircleJumperGame extends Game {
-
-	private AssetManager assetManager;
-	private SpriteBatch batch;
+public class CircleJumperGame extends GameBase {
 
 	@Override
-	public void create() {
-		Gdx.app.setLogLevel(Application.LOG_DEBUG);
-
-		assetManager = new AssetManager();
-		assetManager.getLogger().setLevel(Logger.DEBUG);
-
-		batch = new SpriteBatch();
+	public void postCreate() {
 		setScreen(new GameScreen(this));
-	}
-
-	@Override
-	public void dispose() {
-		super.dispose();
-		assetManager.dispose();
-		batch.dispose();
-	}
-
-	public AssetManager getAssetManager() {
-		return assetManager;
-	}
-
-	public SpriteBatch getBatch() {
-		return batch;
 	}
 }
