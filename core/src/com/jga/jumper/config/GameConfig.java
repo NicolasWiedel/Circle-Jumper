@@ -14,6 +14,9 @@ public class GameConfig {
 
     public static final int CELL_SIZE = 1;
 
+    public static final float PLANET_SIZE = 9f;
+    public static final float PLANET_HALF_SIZE = PLANET_SIZE /2f;
+
     // == constructor ==
     private GameConfig(){
 
