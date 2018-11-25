@@ -17,6 +17,9 @@ public class GameConfig {
     public static final float PLANET_SIZE = 9f;
     public static final float PLANET_HALF_SIZE = PLANET_SIZE /2f;
 
+    public static final float PLAYER_SIZE = 1f;
+    public static final float PLAYER_HALF_SIZE = PLAYER_SIZE / 2f;
+
     // == constructor ==
     private GameConfig(){
 

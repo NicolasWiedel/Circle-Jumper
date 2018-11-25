@@ -4,11 +4,13 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.jga.jumper.config.GameConfig;
 import com.jga.jumper.entity.Planet;
+import com.jga.jumper.entity.Player;
 import com.jga.util.ViewportUtils;
 import com.jga.util.debug.DebugCameraController;
 
@@ -66,7 +68,6 @@ public class GameRenderer implements Disposable {
 
         viewport.apply();
         renderer.setProjectionMatrix(camera.combined);
-        renderer.setColor(Color.RED);
         renderer.begin(ShapeRenderer.ShapeType.Line);
 
         drawDebug();
@@ -75,8 +76,16 @@ public class GameRenderer implements Disposable {
     }
 
     private void drawDebug(){
+        // planet
+        renderer.setColor(Color.RED);
         Planet planet = controller.getPlanet();
         Circle planetBounds = planet.getBounds();
         renderer.circle(planetBounds.x, planetBounds.y, planetBounds.radius, 30);
+
+        // player
+        renderer.setColor(Color.BLUE);
+        Player player = controller.getPlayer();
+        Rectangle playerBounds = player.getBounds();
+        renderer.rect(playerBounds.x, playerBounds.y, playerBounds.width, playerBounds.height);
     }
 }
