@@ -2,8 +2,8 @@ package com.jga.jumper.screen.game;
 
 import com.badlogic.gdx.utils.Logger;
 import com.jga.jumper.config.GameConfig;
+import com.jga.jumper.entity.Monster;
 import com.jga.jumper.entity.Planet;
-import com.jga.jumper.entity.Player;
 
 public class GameController {
 
@@ -12,10 +12,10 @@ public class GameController {
 
     // == attributes ==
     private Planet planet;
-    private Player player;
+    private Monster monster;
 
-    private float playerStartX;
-    private float playerStartY;
+    private float monsterStartX;
+    private float monsterStartY;
 
     // == constructor ==
     public GameController() {
@@ -27,13 +27,12 @@ public class GameController {
         planet = new Planet();
         planet.setPosition(GameConfig.WORLD_CENTER_X, GameConfig.WORLD_CENTER_Y);
 
-        playerStartX= GameConfig.WORLD_CENTER_X - GameConfig.PLANET_HALF_SIZE;
+        monsterStartX = GameConfig.WORLD_CENTER_X - GameConfig.MONSTER_HALF_SIZE;
+        monsterStartY = GameConfig.WORLD_CENTER_Y + GameConfig.PLANET_HALF_SIZE;
 
-
-        player = new Player();
-        player.setPosition(
-                playerStartX,
-                GameConfig.WORLD_CENTER_Y + GameConfig.PLANET_HALF_SIZE + GameConfig.PLAYER_HALF_SIZE);
+        monster = new Monster();
+        monster.setPosition(
+                monsterStartX, monsterStartY);
     }
 
     // == public methods ==
@@ -43,7 +42,7 @@ public class GameController {
         return planet;
     }
 
-    public Player getPlayer() {
-        return player;
+    public Monster getMonster() {
+        return monster;
     }
 }

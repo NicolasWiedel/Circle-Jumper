@@ -10,7 +10,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.jga.jumper.config.GameConfig;
 import com.jga.jumper.entity.Planet;
-import com.jga.jumper.entity.Player;
+import com.jga.jumper.entity.Monster;
 import com.jga.util.ViewportUtils;
 import com.jga.util.debug.DebugCameraController;
 
@@ -82,10 +82,10 @@ public class GameRenderer implements Disposable {
         Circle planetBounds = planet.getBounds();
         renderer.circle(planetBounds.x, planetBounds.y, planetBounds.radius, 30);
 
-        // player
+        // monster
         renderer.setColor(Color.BLUE);
-        Player player = controller.getPlayer();
-        Rectangle playerBounds = player.getBounds();
-        renderer.rect(playerBounds.x, playerBounds.y, playerBounds.width, playerBounds.height);
+        Monster monster = controller.getMonster();
+        Rectangle monsterBounds = monster.getBounds();
+        renderer.rect(monsterBounds.x, monsterBounds.y, monsterBounds.width, monsterBounds.height);
     }
 }
