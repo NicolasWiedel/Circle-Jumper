@@ -37,8 +37,9 @@ public class GameController {
 
     // == public methods ==
     public void update(float delta) {
-
         monster.update(delta);
+
+
     }
 
     public Planet getPlanet() {
