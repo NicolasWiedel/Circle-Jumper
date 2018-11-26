@@ -86,6 +86,12 @@ public class GameRenderer implements Disposable {
         renderer.setColor(Color.BLUE);
         Monster monster = controller.getMonster();
         Rectangle monsterBounds = monster.getBounds();
-        renderer.rect(monsterBounds.x, monsterBounds.y, monsterBounds.width, monsterBounds.height);
+        renderer.rect(
+                monsterBounds.x, monsterBounds.y,
+                0, 0,
+                monsterBounds.width, monsterBounds.height,
+                1,1,
+                GameConfig.MONSTER_START_ANGLE - monster.getAngleDeg()
+        );
     }
 }

@@ -23,7 +23,7 @@ public class GameController {
     }
 
     // == init ==
-    private void init(){
+    private void init() {
         planet = new Planet();
         planet.setPosition(GameConfig.WORLD_CENTER_X, GameConfig.WORLD_CENTER_Y);
 
@@ -36,7 +36,10 @@ public class GameController {
     }
 
     // == public methods ==
-    public void update(float delta){}
+    public void update(float delta) {
+
+        monster.update(delta);
+    }
 
     public Planet getPlanet() {
         return planet;
