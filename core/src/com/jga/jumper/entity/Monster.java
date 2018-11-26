@@ -7,7 +7,7 @@ import com.jga.util.entity.EntityBase;
 public class Monster extends EntityBase {
 
     // == attributes ==
-    private float angleDeg = GameConfig.MONSTER_START_ANGLE;
+    private float angleDeg = GameConfig.START_ANGLE;
     private float angleDegSpeed = GameConfig.MONSTER_START_ANG_SPEED;
     private float speed = 0;
     private float acceleration = GameConfig.MONSTER_START_ACC;

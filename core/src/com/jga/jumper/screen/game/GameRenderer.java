@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.jga.jumper.config.GameConfig;
+import com.jga.jumper.entity.Coin;
 import com.jga.jumper.entity.Planet;
 import com.jga.jumper.entity.Monster;
 import com.jga.util.ViewportUtils;
@@ -68,7 +69,7 @@ public class GameRenderer implements Disposable {
 
         viewport.apply();
         renderer.setProjectionMatrix(camera.combined);
-        renderer.begin(ShapeRenderer.ShapeType.Line);
+        renderer.begin(ShapeRenderer.ShapeType.Filled);
 
         drawDebug();
 
@@ -91,7 +92,20 @@ public class GameRenderer implements Disposable {
                 0, 0,
                 monsterBounds.width, monsterBounds.height,
                 1,1,
-                GameConfig.MONSTER_START_ANGLE - monster.getAngleDeg()
+                GameConfig.START_ANGLE - monster.getAngleDeg()
         );
+
+        // coins
+        renderer.setColor(Color.YELLOW);
+        for(Coin coin : controller.getCoins()){
+            Rectangle coinBounds = coin.getBounds();
+            renderer.rect(
+                    coinBounds.x, coinBounds.y,
+                    0, 0,
+                    coinBounds.width, coinBounds.height,
+                    1, 1,
+                    GameConfig.START_ANGLE - coin.getAngleDeg()
+                    );
+        }
     }
 }
