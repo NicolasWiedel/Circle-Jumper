@@ -1,5 +1,7 @@
 package com.jga.jumper.screen.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.Logger;
 import com.jga.jumper.config.GameConfig;
 import com.jga.jumper.entity.Monster;
@@ -37,6 +39,10 @@ public class GameController {
 
     // == public methods ==
     public void update(float delta) {
+        if(Gdx.input.isKeyPressed(Input.Keys.SPACE ) && monster.isWalking()){
+            monster.jump();
+        }
+
         monster.update(delta);
 
 
