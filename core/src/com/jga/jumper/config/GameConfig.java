@@ -36,7 +36,7 @@ public class GameConfig {
     public static final float OBSTACLE_SIZE = 1f;
     public static final float OBSTACLE_HALF_SIZE = OBSTACLE_SIZE / 2f;
     public static final float OBSTACLE_SPAWN_TIME = 0.75f;
-    public static final float MAX_OBSTACLEs = 3f;
+    public static final float MAX_OBSTACLES = 3f;
 
     // == constructor ==
     private GameConfig(){

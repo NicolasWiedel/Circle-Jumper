@@ -16,6 +16,7 @@ import com.jga.jumper.assets.AssetDescriptors;
 import com.jga.jumper.common.GameManager;
 import com.jga.jumper.config.GameConfig;
 import com.jga.jumper.entity.Coin;
+import com.jga.jumper.entity.Obstacle;
 import com.jga.jumper.entity.Planet;
 import com.jga.jumper.entity.Monster;
 import com.jga.util.ViewportUtils;
@@ -48,7 +49,7 @@ public class GameRenderer implements Disposable {
     }
 
     // == init ==
-    private void init(){
+    private void init() {
         camera = new OrthographicCamera();
         viewport = new FitViewport(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT, camera);
         renderer = new ShapeRenderer();
@@ -62,7 +63,7 @@ public class GameRenderer implements Disposable {
     }
 
     // == public methods ==
-    public void render(float delta){
+    public void render(float delta) {
         debugCameraController.handleDebugInput(delta);
         debugCameraController.applyTo(camera);
 
@@ -70,7 +71,7 @@ public class GameRenderer implements Disposable {
         renderHud();
     }
 
-    public void resize(int width, int height){
+    public void resize(int width, int height) {
         viewport.update(width, height, true);
         hudViewport.update(width, height, true);
         ViewportUtils.debugPixelsPerUnit(viewport);
@@ -82,7 +83,7 @@ public class GameRenderer implements Disposable {
     }
 
     // == private methods ==
-    private void renderDebug(){
+    private void renderDebug() {
 
         ViewportUtils.drawGrid(viewport, renderer, GameConfig.CELL_SIZE);
 
@@ -95,7 +96,7 @@ public class GameRenderer implements Disposable {
         renderer.end();
     }
 
-    private void drawDebug(){
+    private void drawDebug() {
         // planet
         renderer.setColor(Color.RED);
         Planet planet = controller.getPlanet();
@@ -110,13 +111,13 @@ public class GameRenderer implements Disposable {
                 monsterBounds.x, monsterBounds.y,
                 0, 0,
                 monsterBounds.width, monsterBounds.height,
-                1,1,
+                1, 1,
                 GameConfig.START_ANGLE - monster.getAngleDeg()
         );
 
         // coins
         renderer.setColor(Color.YELLOW);
-        for(Coin coin : controller.getCoins()){
+        for (Coin coin : controller.getCoins()) {
             Rectangle coinBounds = coin.getBounds();
             renderer.rect(
                     coinBounds.x, coinBounds.y,
@@ -124,11 +125,35 @@ public class GameRenderer implements Disposable {
                     coinBounds.width, coinBounds.height,
                     1, 1,
                     GameConfig.START_ANGLE - coin.getAngleDeg()
-                    );
+            );
+        }
+
+        // obstcles
+        for(Obstacle obstacle : controller.getObstacles()){
+            renderer.setColor(Color.GREEN);
+            Rectangle obstacleBound = obstacle.getBounds();
+            renderer.rect(
+                    obstacleBound.x, obstacleBound.y,
+                    0, 0,
+                    obstacleBound.width, obstacleBound.height,
+                    1, 1,
+                    GameConfig.START_ANGLE - obstacle.getAngleDeg()
+            );
+
+            // sensor
+            renderer.setColor(Color.WHITE);
+            Rectangle sensorBounds = obstacle.getSensor();
+            renderer.rect(
+                    sensorBounds.x, sensorBounds.y,
+                    0, 0,
+                    sensorBounds.width, sensorBounds.height,
+                    1, 1,
+                    GameConfig.START_ANGLE -obstacle.getAngleDeg()
+            );
         }
     }
 
-    private void renderHud(){
+    private void renderHud() {
         hudViewport.apply();
 
         batch.setProjectionMatrix(hudViewport.getCamera().combined);
@@ -139,7 +164,7 @@ public class GameRenderer implements Disposable {
         batch.end();
     }
 
-    private void drawHud(){
+    private void drawHud() {
 
         float padding = 20f;
 

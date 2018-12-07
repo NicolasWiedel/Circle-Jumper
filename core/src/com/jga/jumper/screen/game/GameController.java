@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.Pools;
 import com.jga.jumper.config.GameConfig;
 import com.jga.jumper.entity.Coin;
 import com.jga.jumper.entity.Monster;
+import com.jga.jumper.entity.Obstacle;
 import com.jga.jumper.entity.Planet;
 
 public class GameController {
@@ -27,6 +28,10 @@ public class GameController {
     private final Array<Coin> coins = new Array<Coin>();
     private final Pool<Coin> coinPool = Pools.get(Coin.class, 10);
     private float coinTimer;
+
+    private final Array<Obstacle> obstacles = new Array<Obstacle>();
+    private final Pool<Obstacle> obstaclePool = Pools.get(Obstacle.class, 10);
+    private float obstacleTimer;
 
     // == constructor ==
     public GameController() {
@@ -54,6 +59,7 @@ public class GameController {
 
         monster.update(delta);
 
+        spawnObstacles(delta);
         spawnCoin(delta);
     }
 
@@ -67,6 +73,10 @@ public class GameController {
 
     public Array<Coin> getCoins() {
         return coins;
+    }
+
+    public Array<Obstacle> getObstacles() {
+        return obstacles;
     }
 
     // == private methods ==
@@ -85,6 +95,23 @@ public class GameController {
             float randomAngle = MathUtils.random(360);
             coin.setAngleDeg(randomAngle);
             coins.add(coin);
+        }
+    }
+
+    private void spawnObstacles(float delta){
+        obstacleTimer += delta;
+
+        if(obstacles.size >= GameConfig.MAX_OBSTACLES){
+            obstacleTimer =0;
+            return;
+        }
+
+        if(obstacleTimer >= GameConfig.OBSTACLE_SPAWN_TIME){
+            obstacleTimer = 0;
+            Obstacle obstacle = obstaclePool.obtain();
+            float randomAngle = MathUtils.random(360);
+            obstacle.setAngleDeg(randomAngle);
+            obstacles.add(obstacle);
         }
     }
 }
