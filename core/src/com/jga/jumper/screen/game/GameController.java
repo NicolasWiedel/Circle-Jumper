@@ -2,11 +2,13 @@ package com.jga.jumper.screen.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
+import com.jga.jumper.common.GameManager;
 import com.jga.jumper.config.GameConfig;
 import com.jga.jumper.entity.Coin;
 import com.jga.jumper.entity.Monster;
@@ -61,6 +63,8 @@ public class GameController {
 
         spawnObstacles(delta);
         spawnCoin(delta);
+
+        checkCollision();
     }
 
     public Planet getPlanet() {
@@ -113,5 +117,43 @@ public class GameController {
             obstacle.setAngleDeg(randomAngle);
             obstacles.add(obstacle);
         }
+    }
+
+    private void checkCollision(){
+        // player <==> coins
+        for(int i = 0; i < coins.size; i++){
+            Coin coin = coins.get(i);
+
+            if(Intersector.overlaps(monster.getBounds(), coin.getBounds())){
+                GameManager.INSTANCE.addScore(GameConfig.COIN_SCORE);
+                coinPool.free(coin);
+                coins.removeIndex(i);
+            }
+        }
+        // player <==> obstacle
+        for(int i = 0; i < obstacles.size; i++){
+            Obstacle obstacle = obstacles.get(i);
+
+            if(Intersector.overlaps(monster.getBounds(), obstacle.getSensor())){
+                GameManager.INSTANCE.addScore(GameConfig.OBSTACLE_SCORE);
+                obstaclePool.free(obstacle);
+                obstacles.removeIndex(i);
+            } else if(Intersector.overlaps(monster.getBounds(), obstacle.getBounds())){
+                restart();
+            }
+        }
+    }
+
+    private void restart(){
+        coinPool.freeAll(coins);
+        coins.clear();
+
+        obstaclePool.freeAll(obstacles);
+        obstacles.clear();
+
+        GameManager.INSTANCE.reset();
+
+        monster.reset();
+        monster.setPosition(monsterStartX, monsterStartY);
     }
 }
