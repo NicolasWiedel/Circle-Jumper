@@ -2,7 +2,6 @@ package com.jga.jumper.screen.game;
 
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.assets.AssetManager;
-import com.jga.jumper.CircleJumperGame;
 import com.jga.util.GdxUtils;
 import com.jga.util.game.GameBase;
 
@@ -26,7 +25,7 @@ public class GameScreen extends ScreenAdapter {
     @Override
     public void show() {
         controller = new GameController();
-        renderer = new GameRenderer(controller);
+        renderer = new GameRenderer(controller, game.getBatch(), assetManager);
     }
 
     @Override

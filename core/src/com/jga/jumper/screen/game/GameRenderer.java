@@ -1,13 +1,19 @@
 package com.jga.jumper.screen.game;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.jga.jumper.assets.AssetDescriptors;
+import com.jga.jumper.common.GameManager;
 import com.jga.jumper.config.GameConfig;
 import com.jga.jumper.entity.Coin;
 import com.jga.jumper.entity.Planet;
@@ -19,18 +25,25 @@ public class GameRenderer implements Disposable {
 
     // == attributes ==
     private final GameController controller;
+    private final SpriteBatch batch;
+    private final AssetManager assetManger;
 
     private OrthographicCamera camera;
     private Viewport viewport;
     private ShapeRenderer renderer;
 
+    private Viewport hudViewport;
+    private BitmapFont font;
+
+    private final GlyphLayout layout = new GlyphLayout();
+
     private DebugCameraController debugCameraController;
 
     // == constructor ==
-
-
-    public GameRenderer(GameController controller) {
+    public GameRenderer(GameController controller, SpriteBatch batch, AssetManager assetManger) {
         this.controller = controller;
+        this.batch = batch;
+        this.assetManger = assetManger;
         init();
     }
 
@@ -39,6 +52,10 @@ public class GameRenderer implements Disposable {
         camera = new OrthographicCamera();
         viewport = new FitViewport(GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT, camera);
         renderer = new ShapeRenderer();
+
+        hudViewport = new FitViewport(GameConfig.HUD_WIDTH, GameConfig.HUD_HEIGHT);
+
+        font = assetManger.get(AssetDescriptors.FONT);
 
         debugCameraController = new DebugCameraController();
         debugCameraController.setStartPosition(GameConfig.WORLD_CENTER_X, GameConfig.WORLD_CENTER_Y);
@@ -50,10 +67,12 @@ public class GameRenderer implements Disposable {
         debugCameraController.applyTo(camera);
 
         renderDebug();
+        renderHud();
     }
 
     public void resize(int width, int height){
         viewport.update(width, height, true);
+        hudViewport.update(width, height, true);
         ViewportUtils.debugPixelsPerUnit(viewport);
     }
 
@@ -107,5 +126,33 @@ public class GameRenderer implements Disposable {
                     GameConfig.START_ANGLE - coin.getAngleDeg()
                     );
         }
+    }
+
+    private void renderHud(){
+        hudViewport.apply();
+
+        batch.setProjectionMatrix(hudViewport.getCamera().combined);
+        batch.begin();
+
+        drawHud();
+
+        batch.end();
+    }
+
+    private void drawHud(){
+
+        float padding = 20f;
+
+        // high score
+        String highScoreString = "HIGH SCORE: " + GameManager.INSTANCE.getDisplayHighScore();
+        layout.setText(font, highScoreString);
+        font.draw(batch, layout, padding, GameConfig.HUD_HEIGHT - layout.height);
+
+        // score
+        String scoreString = "SCORE: " + GameManager.INSTANCE.getDisplayScore();
+        layout.setText(font, scoreString);
+        font.draw(batch, layout,
+                GameConfig.HUD_WIDTH - layout.width - padding,
+                GameConfig.HUD_HEIGHT - layout.height);
     }
 }
