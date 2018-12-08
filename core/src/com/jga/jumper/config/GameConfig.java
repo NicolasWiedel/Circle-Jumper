@@ -40,6 +40,8 @@ public class GameConfig {
     public static final float MAX_OBSTACLES = 3f;
     public static final int OBSTACLE_SCORE = 5;
 
+    public static final float START_WAIT_TIME = 3f;
+
     // == constructor ==
     private GameConfig(){
 

@@ -35,6 +35,8 @@ public class GameController {
     private final Pool<Obstacle> obstaclePool = Pools.get(Obstacle.class, 10);
     private float obstacleTimer;
 
+    private float startWaitTimer = GameConfig.START_WAIT_TIME;
+
     // == constructor ==
     public GameController() {
         init();
@@ -55,6 +57,13 @@ public class GameController {
 
     // == public methods ==
     public void update(float delta) {
+        if(startWaitTimer > 0){
+            startWaitTimer -= delta;
+            return;
+        }
+
+        GameManager.INSTANCE.updateDisplayScore(delta);
+
         if(Gdx.input.isKeyPressed(Input.Keys.SPACE ) && monster.isWalking()){
             monster.jump();
         }
@@ -81,6 +90,10 @@ public class GameController {
 
     public Array<Obstacle> getObstacles() {
         return obstacles;
+    }
+
+    public float getStartWaitTimer() {
+        return startWaitTimer;
     }
 
     // == private methods ==
@@ -155,5 +168,6 @@ public class GameController {
 
         monster.reset();
         monster.setPosition(monsterStartX, monsterStartY);
+        startWaitTimer = GameConfig.START_WAIT_TIME;
     }
 }
