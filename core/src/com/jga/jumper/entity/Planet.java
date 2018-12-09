@@ -16,7 +16,9 @@ public class Planet {
 
     //== constructor ==
     public Planet(){
+
         bounds = new Circle(x,y, GameConfig.PLANET_HALF_SIZE);
+        setSize(GameConfig.PLANET_SIZE, GameConfig.PLANET_SIZE);
     }
 
     // == public methods ==
@@ -74,6 +76,8 @@ public class Planet {
 
     // == private methods ==
     private void updateBounds(){
-        bounds.setPosition(x, y);
+        float halfWidth = getWidth() / 2;
+        float halfHeight = getHeight() / 2;
+        bounds.setPosition(x + halfWidth, y + halfHeight);
     }
 }

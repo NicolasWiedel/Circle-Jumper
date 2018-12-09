@@ -45,7 +45,10 @@ public class GameController {
     // == init ==
     private void init() {
         planet = new Planet();
-        planet.setPosition(GameConfig.WORLD_CENTER_X, GameConfig.WORLD_CENTER_Y);
+        planet.setPosition(
+                GameConfig.WORLD_CENTER_X - GameConfig.PLANET_HALF_SIZE,
+                GameConfig.WORLD_CENTER_Y - GameConfig.PLANET_HALF_SIZE
+        );
 
         monsterStartX = GameConfig.WORLD_CENTER_X - GameConfig.MONSTER_HALF_SIZE;
         monsterStartY = GameConfig.WORLD_CENTER_Y + GameConfig.PLANET_HALF_SIZE;

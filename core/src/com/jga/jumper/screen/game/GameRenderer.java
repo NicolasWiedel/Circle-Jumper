@@ -6,13 +6,17 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.jga.jumper.assets.AssetDescriptors;
+import com.jga.jumper.assets.RegionNames;
 import com.jga.jumper.common.GameManager;
 import com.jga.jumper.config.GameConfig;
 import com.jga.jumper.entity.Coin;
@@ -40,6 +44,12 @@ public class GameRenderer implements Disposable {
 
     private DebugCameraController debugCameraController;
 
+    private TextureRegion backgroundRegion;
+    private TextureRegion planetRegion;
+    private TextureRegion obstacleRegion;
+    private TextureRegion coinRegion;
+    private TextureRegion monsterRegion;
+
     // == constructor ==
     public GameRenderer(GameController controller, SpriteBatch batch, AssetManager assetManger) {
         this.controller = controller;
@@ -60,6 +70,15 @@ public class GameRenderer implements Disposable {
 
         debugCameraController = new DebugCameraController();
         debugCameraController.setStartPosition(GameConfig.WORLD_CENTER_X, GameConfig.WORLD_CENTER_Y);
+
+        TextureAtlas gamePlayAtlas = assetManger.get(AssetDescriptors.GAME_PLAY);
+
+        backgroundRegion = gamePlayAtlas.findRegion(RegionNames.BACKGROUND);
+        planetRegion = gamePlayAtlas.findRegion(RegionNames.PLANET);
+
+        obstacleRegion = gamePlayAtlas.findRegions(RegionNames.OBSTACLE).first();
+        coinRegion = gamePlayAtlas.findRegions(RegionNames.COIN).first();
+        monsterRegion = gamePlayAtlas.findRegions(RegionNames.PLAYER).first();
     }
 
     // == public methods ==
@@ -67,6 +86,7 @@ public class GameRenderer implements Disposable {
         debugCameraController.handleDebugInput(delta);
         debugCameraController.applyTo(camera);
 
+        renderGamePlay(delta);
         renderDebug();
         renderHud();
     }
@@ -83,13 +103,70 @@ public class GameRenderer implements Disposable {
     }
 
     // == private methods ==
+    private void renderGamePlay(float delta){
+        viewport.apply();
+        batch.setProjectionMatrix(camera.combined);
+        batch.begin();
+
+        drawGamePlay(delta);
+
+        batch.end();
+    }
+
+    private void drawGamePlay(float delta){
+        // background
+        batch.draw(backgroundRegion,
+                0, 0,
+                GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
+
+        // planet
+        Planet planet = controller.getPlanet();
+        batch.draw(planetRegion,
+                planet.getX(), planet.getY(),
+                planet.getWidth(), planet.getHeight());
+
+        // obstacles
+        Array<Obstacle> obstacles = controller.getObstacles();
+        for(Obstacle obstacle : obstacles){
+            batch.draw(obstacleRegion,
+                obstacle.getX(), obstacle.getY(),
+                0, 0,
+                obstacle.getWidth(), obstacle.getHeight(),
+                1.0f, 1.0f,
+                GameConfig.START_ANGLE - obstacle.getAngleDeg()
+            );
+
+        }
+        // coins
+        Array<Coin> coins = controller.getCoins();
+        for(Coin coin : coins){
+            batch.draw(coinRegion,
+                    coin.getX(), coin.getY(),
+                    0, 0,
+                    coin.getWidth(), coin.getHeight(),
+                    1.0f, 1.0f,
+                    GameConfig.START_ANGLE - coin.getAngleDeg()
+            );
+
+        }
+        // monster
+        Monster monster = controller.getMonster();
+        batch.draw(monsterRegion,
+                monster.getX(), monster.getY(),
+                0, 0,
+                monster.getWidth(), monster.getHeight(),
+               1.0f, 1.0f,
+               GameConfig.START_ANGLE - monster.getAngleDeg()
+        );
+    }
+
     private void renderDebug() {
 
         ViewportUtils.drawGrid(viewport, renderer, GameConfig.CELL_SIZE);
 
         viewport.apply();
         renderer.setProjectionMatrix(camera.combined);
-        renderer.begin(ShapeRenderer.ShapeType.Filled);
+        renderer.begin(ShapeRenderer.ShapeType.Line);
 
         drawDebug();
 
