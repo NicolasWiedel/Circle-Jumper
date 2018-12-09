@@ -36,6 +36,7 @@ public class GameController {
     private float obstacleTimer;
 
     private float startWaitTimer = GameConfig.START_WAIT_TIME;
+    private float animationTime;
 
     // == constructor ==
     public GameController() {
@@ -60,6 +61,7 @@ public class GameController {
 
     // == public methods ==
     public void update(float delta) {
+        animationTime += delta;
         if(startWaitTimer > 0){
             startWaitTimer -= delta;
             return;
@@ -97,6 +99,10 @@ public class GameController {
 
     public float getStartWaitTimer() {
         return startWaitTimer;
+    }
+
+    public float getAnimationTime() {
+        return animationTime;
     }
 
     // == private methods ==
@@ -247,5 +253,6 @@ public class GameController {
         monster.reset();
         monster.setPosition(monsterStartX, monsterStartY);
         startWaitTimer = GameConfig.START_WAIT_TIME;
+        animationTime = 0f;
     }
 }
