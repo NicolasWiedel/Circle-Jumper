@@ -226,7 +226,7 @@ public class GameController {
                 obstaclePool.free(obstacle);
                 obstacles.removeIndex(i);
             } else if(Intersector.overlaps(monster.getBounds(), obstacle.getBounds())){
-//                restart();
+                restart();
             }
         }
     }
@@ -238,6 +238,7 @@ public class GameController {
         obstaclePool.freeAll(obstacles);
         obstacles.clear();
 
+        GameManager.INSTANCE.updateHighScore();
         GameManager.INSTANCE.reset();
 
         monster.reset();
