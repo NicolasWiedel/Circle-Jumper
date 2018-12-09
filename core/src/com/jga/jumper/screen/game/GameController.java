@@ -149,23 +149,60 @@ public class GameController {
     }
 
     private boolean isMonsterNearBy(float angle){
+        float playerDiff = Math.abs(Math.abs(monster.getAngleDeg() - Math.abs(angle)));
 
+        if(playerDiff < GameConfig.MIN_ANG_DIST){
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean isObstacleNearBy(float angle){
+        angle = Math.abs(angle);
+
+        for(Obstacle obstacle : obstacles){
+            float angleDeg = Math.abs(obstacle.getAngleDeg());
+            float diff = Math.abs(angleDeg - angle);
+
+            if(diff < GameConfig.MIN_ANG_DIST){
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void spawnObstacles(float delta){
         obstacleTimer += delta;
 
-        if(obstacles.size >= GameConfig.MAX_OBSTACLES){
-            obstacleTimer =0;
+        if(obstacleTimer < GameConfig.OBSTACLE_SPAWN_TIME){
             return;
         }
 
-        if(obstacleTimer >= GameConfig.OBSTACLE_SPAWN_TIME){
-            obstacleTimer = 0;
-            Obstacle obstacle = obstaclePool.obtain();
-            float randomAngle = MathUtils.random(360);
-            obstacle.setAngleDeg(randomAngle);
-            obstacles.add(obstacle);
+        obstacleTimer = 0;
+
+        if(obstacles.size == 0){
+            addObstacles();
+        }
+    }
+
+    private void addObstacles(){
+        int count = MathUtils.random(2, GameConfig.MAX_OBSTACLES);
+
+        for(int i = 0; i < count; i++){
+            float randomAngle = monster.getAngleDeg() + i * GameConfig.MIN_ANG_DIST -
+                    MathUtils.random(60, 80);
+
+            boolean canSpawn = !isObstacleNearBy(randomAngle)
+                    && !isCoinNearBy(randomAngle)
+                    && !isMonsterNearBy(randomAngle);
+
+            if (canSpawn){
+                Obstacle obstacle = obstaclePool.obtain();
+                obstacle.setAngleDeg(randomAngle);
+                obstacles.add(obstacle);
+            }
         }
     }
 
@@ -189,7 +226,7 @@ public class GameController {
                 obstaclePool.free(obstacle);
                 obstacles.removeIndex(i);
             } else if(Intersector.overlaps(monster.getBounds(), obstacle.getBounds())){
-                restart();
+//                restart();
             }
         }
     }
