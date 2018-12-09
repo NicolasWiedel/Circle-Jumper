@@ -129,25 +129,25 @@ public class GameRenderer implements Disposable {
                 0, 0,
                 GameConfig.WORLD_WIDTH, GameConfig.WORLD_HEIGHT);
 
+        // obstacles
+        Array<Obstacle> obstacles = controller.getObstacles();
+        TextureRegion obstacleRegion = obstacleAnimation.getKeyFrame(controller.getAnimationTime());
+        for(Obstacle obstacle : obstacles){
+            batch.draw(obstacleRegion,
+                    obstacle.getX(), obstacle.getY(),
+                    0, 0,
+                    obstacle.getWidth(), obstacle.getHeight(),
+                    1.0f, 1.0f,
+                    GameConfig.START_ANGLE - obstacle.getAngleDeg()
+            );
+        }
+
         // planet
         Planet planet = controller.getPlanet();
         batch.draw(planetRegion,
                 planet.getX(), planet.getY(),
                 planet.getWidth(), planet.getHeight());
 
-        // obstacles
-        Array<Obstacle> obstacles = controller.getObstacles();
-        TextureRegion obstacleRegion = obstacleAnimation.getKeyFrame(controller.getAnimationTime());
-        for(Obstacle obstacle : obstacles){
-            batch.draw(obstacleRegion,
-                obstacle.getX(), obstacle.getY(),
-                0, 0,
-                obstacle.getWidth(), obstacle.getHeight(),
-                1.0f, 1.0f,
-                GameConfig.START_ANGLE - obstacle.getAngleDeg()
-            );
-
-        }
         // coins
         Array<Coin> coins = controller.getCoins();
         TextureRegion coinRegion = coinAnimation.getKeyFrame(controller.getAnimationTime());
@@ -156,7 +156,7 @@ public class GameRenderer implements Disposable {
                     coin.getX(), coin.getY(),
                     0, 0,
                     coin.getWidth(), coin.getHeight(),
-                    1.0f, 1.0f,
+                    coin.getScale(), coin.getScale(),
                     GameConfig.START_ANGLE - coin.getAngleDeg()
             );
 
@@ -213,7 +213,7 @@ public class GameRenderer implements Disposable {
                     coinBounds.x, coinBounds.y,
                     0, 0,
                     coinBounds.width, coinBounds.height,
-                    1, 1,
+                    coin.getScale(), coin.getScale(),
                     GameConfig.START_ANGLE - coin.getAngleDeg()
             );
         }

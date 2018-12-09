@@ -75,6 +75,14 @@ public class GameController {
 
         monster.update(delta);
 
+        for(Obstacle obstacle : obstacles){
+            obstacle.update(delta);
+        }
+
+        for(Coin coin : coins){
+            coin.update(delta);
+        }
+
         spawnObstacles(delta);
         spawnCoin(delta);
 
@@ -200,7 +208,7 @@ public class GameController {
         int count = MathUtils.random(2, GameConfig.MAX_OBSTACLES);
 
         for(int i = 0; i < count; i++){
-            float randomAngle = monster.getAngleDeg() + i * GameConfig.MIN_ANG_DIST -
+            float randomAngle = monster.getAngleDeg() - i * GameConfig.MIN_ANG_DIST -
                     MathUtils.random(60, 80);
 
             boolean canSpawn = !isObstacleNearBy(randomAngle)
