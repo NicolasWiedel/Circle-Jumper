@@ -16,6 +16,7 @@ import com.jga.jumper.entity.Coin;
 import com.jga.jumper.entity.Monster;
 import com.jga.jumper.entity.Obstacle;
 import com.jga.jumper.entity.Planet;
+import com.jga.jumper.screen.menu.OverlayCallback;
 
 public class GameController {
 
@@ -41,6 +42,7 @@ public class GameController {
     private float animationTime;
 
     private GameState gameState = GameState.MENU;
+    private OverlayCallback callback;
 
     // == constructor ==
     public GameController() {
@@ -61,6 +63,19 @@ public class GameController {
         monster = new Monster();
         monster.setPosition(
                 monsterStartX, monsterStartY);
+
+        callback = new OverlayCallback() {
+            @Override
+            public void home() {
+                gameState = GameState.MENU;
+            }
+
+            @Override
+            public void ready() {
+                restart();
+                gameState = GameState.READY;
+            }
+        };
     }
 
     // == public methods ==
@@ -124,6 +139,14 @@ public class GameController {
 
     public float getAnimationTime() {
         return animationTime;
+    }
+
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public OverlayCallback getCallback() {
+        return callback;
     }
 
     public void restart(){

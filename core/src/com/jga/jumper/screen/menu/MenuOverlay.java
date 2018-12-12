@@ -63,7 +63,7 @@ public class MenuOverlay extends Table {
         buttonTable.add(scoreTable).bottom().expandX();
         buttonTable.add(quitButton).right().expandX();
 
-        add(logoImage).top().grow().row();
+        add(logoTable).top().grow().row();
         add(buttonTable).grow().center().row();
         center();
         setFillParent(true);
