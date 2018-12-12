@@ -9,6 +9,8 @@ public class RegionNames {
     public static final String PLANET = "earth";
     public static final String PLAYER_IDLE = "player_idle";
 
+    public static final String LOGO = "logo";
+
     private RegionNames(){
 
     }

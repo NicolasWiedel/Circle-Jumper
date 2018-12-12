@@ -1,5 +1,6 @@
 package com.jga.jumper.screen.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Intersector;
@@ -9,6 +10,7 @@ import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
 import com.jga.jumper.common.GameManager;
+import com.jga.jumper.common.GameState;
 import com.jga.jumper.config.GameConfig;
 import com.jga.jumper.entity.Coin;
 import com.jga.jumper.entity.Monster;
@@ -38,6 +40,8 @@ public class GameController {
     private float startWaitTimer = GameConfig.START_WAIT_TIME;
     private float animationTime;
 
+    private GameState gameState = GameState.MENU;
+
     // == constructor ==
     public GameController() {
         init();
@@ -61,11 +65,20 @@ public class GameController {
 
     // == public methods ==
     public void update(float delta) {
-        animationTime += delta;
-        if(startWaitTimer > 0){
+
+        if(gameState.isReady() && startWaitTimer > 0){
             startWaitTimer -= delta;
+
+            if(startWaitTimer <= 0){
+                gameState = GameState.PLAYING;
+            }
+        }
+
+        if(!gameState.isPlaying()){
             return;
         }
+
+        animationTime += delta;
 
         GameManager.INSTANCE.updateDisplayScore(delta);
 
@@ -111,6 +124,23 @@ public class GameController {
 
     public float getAnimationTime() {
         return animationTime;
+    }
+
+    public void restart(){
+        coinPool.freeAll(coins);
+        coins.clear();
+
+        obstaclePool.freeAll(obstacles);
+        obstacles.clear();
+
+        GameManager.INSTANCE.updateHighScore();
+        GameManager.INSTANCE.reset();
+
+        monster.reset();
+        monster.setPosition(monsterStartX, monsterStartY);
+        startWaitTimer = GameConfig.START_WAIT_TIME;
+        animationTime = 0f;
+        gameState = GameState.READY;
     }
 
     // == private methods ==
@@ -243,24 +273,8 @@ public class GameController {
                 obstaclePool.free(obstacle);
                 obstacles.removeIndex(i);
             } else if(Intersector.overlaps(monster.getBounds(), obstacle.getBounds())){
-                restart();
+                gameState = GameState.GAME_OVER;
             }
         }
-    }
-
-    private void restart(){
-        coinPool.freeAll(coins);
-        coins.clear();
-
-        obstaclePool.freeAll(obstacles);
-        obstacles.clear();
-
-        GameManager.INSTANCE.updateHighScore();
-        GameManager.INSTANCE.reset();
-
-        monster.reset();
-        monster.setPosition(monsterStartX, monsterStartY);
-        startWaitTimer = GameConfig.START_WAIT_TIME;
-        animationTime = 0f;
     }
 }
