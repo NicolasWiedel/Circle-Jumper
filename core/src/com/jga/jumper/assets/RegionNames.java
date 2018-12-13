@@ -10,6 +10,7 @@ public class RegionNames {
     public static final String PLAYER_IDLE = "player_idle";
 
     public static final String LOGO = "logo";
+    public static final String GAME_OVER = "game-over";
 
     private RegionNames(){
 
