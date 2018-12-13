@@ -70,4 +70,8 @@ public class GameManager {
     public int getHighScore() {
         return highScore;
     }
+
+    public int getScore() {
+        return score;
+    }
 }
