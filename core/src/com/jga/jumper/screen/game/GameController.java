@@ -9,6 +9,7 @@ import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.Logger;
 import com.badlogic.gdx.utils.Pool;
 import com.badlogic.gdx.utils.Pools;
+import com.jga.jumper.common.FloatingScore;
 import com.jga.jumper.common.GameManager;
 import com.jga.jumper.common.GameState;
 import com.jga.jumper.common.SoundListener;
@@ -46,6 +47,9 @@ public class GameController {
 
     private GameState gameState = GameState.MENU;
     private OverlayCallback callback;
+
+    private final Array<FloatingScore> floatinScores = new Array<FloatingScore>();
+    private Pool<FloatingScore> floatingScorePool = Pools.get(FloatingScore.class);
 
     // == constructor ==
     public GameController(SoundListener listener) {
@@ -116,6 +120,16 @@ public class GameController {
             coin.update(delta);
         }
 
+        for(int i = 0; i < floatinScores.size; i++){
+            FloatingScore floatingScore = floatinScores.get(i);
+            floatingScore.update(delta);
+
+            if(floatingScore.isFinished()){
+                floatingScorePool.free(floatingScore);
+                floatinScores.removeIndex(i);
+            }
+        }
+
         spawnObstacles(delta);
         spawnCoin(delta);
 
@@ -136,6 +150,10 @@ public class GameController {
 
     public Array<Obstacle> getObstacles() {
         return obstacles;
+    }
+
+    public Array<FloatingScore> getFloatinScores() {
+        return floatinScores;
     }
 
     public float getStartWaitTimer() {
@@ -160,6 +178,9 @@ public class GameController {
 
         obstaclePool.freeAll(obstacles);
         obstacles.clear();
+
+        floatingScorePool.freeAll(floatinScores);
+        floatinScores.clear();
 
         GameManager.INSTANCE.updateHighScore();
         GameManager.INSTANCE.reset();
@@ -288,6 +309,7 @@ public class GameController {
 
             if(Intersector.overlaps(monster.getBounds(), coin.getBounds())){
                 GameManager.INSTANCE.addScore(GameConfig.COIN_SCORE);
+                addFloatingScore(GameConfig.COIN_SCORE);
                 coinPool.free(coin);
                 coins.removeIndex(i);
                 listener.hitCoin();
@@ -299,6 +321,7 @@ public class GameController {
 
             if(Intersector.overlaps(monster.getBounds(), obstacle.getSensor())){
                 GameManager.INSTANCE.addScore(GameConfig.OBSTACLE_SCORE);
+                addFloatingScore(GameConfig.OBSTACLE_SCORE);
                 obstaclePool.free(obstacle);
                 obstacles.removeIndex(i);
             } else if(Intersector.overlaps(monster.getBounds(), obstacle.getBounds())){
@@ -306,5 +329,12 @@ public class GameController {
                 gameState = GameState.GAME_OVER;
             }
         }
+    }
+
+    private void addFloatingScore(int score){
+        FloatingScore floatingScore = floatingScorePool.obtain();
+        floatingScore.setStartPosition(GameConfig.HUD_WIDTH / 2, GameConfig.HUD_HEIGHT / 2);
+        floatingScore.setScore(score);
+        floatinScores.add(floatingScore);
     }
 }

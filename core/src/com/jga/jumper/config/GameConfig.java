@@ -43,6 +43,8 @@ public class GameConfig {
     public static final float START_WAIT_TIME = 3f;
     public static final float MIN_ANG_DIST = 60f;
 
+    public static final float FLOATING_DURATION = 0.75f;
+
     // == constructor ==
     private GameConfig(){
 
